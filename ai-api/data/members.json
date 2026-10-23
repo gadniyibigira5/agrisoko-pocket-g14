@@ -24,10 +24,10 @@
                         "feature":  "Home screen navigation shell",
                         "outcomeMetric":  null,
                         "evidenceLinks":  {
-                                              "issue":  "",
-                                              "pr":  "",
-                                              "commit":  "",
-                                              "demoTimestamp":  ""
+                                              "issue":  "https://github.com/gadniyibigira5/agrisoko-pocket-g14/issues/1",
+                                              "pr":  "https://github.com/gadniyibigira5/agrisoko-pocket-g14/pull/13",
+                                              "commit":  "https://github.com/gadniyibigira5/agrisoko-pocket-g14/commit/0b01df6",
+                                              "demoTimestamp":  "01:24"
                                           },
                         "testerFeedback":  null,
                         "introductionDraft":  "My name is Gad. I am the group lead of AgriSoko Pocket G14. I built the app shell and navigation so visitors can move from the home screen to any teammate profile."
@@ -54,10 +54,10 @@
                         "feature":  "TF-IDF matcher POST ask endpoint",
                         "outcomeMetric":  null,
                         "evidenceLinks":  {
-                                              "issue":  "",
-                                              "pr":  "",
-                                              "commit":  "",
-                                              "demoTimestamp":  ""
+                                              "issue":  "https://github.com/gadniyibigira5/agrisoko-pocket-g14/issues/2",
+                                              "pr":  "https://github.com/gadniyibigira5/agrisoko-pocket-g14/pull/12",
+                                              "commit":  "https://github.com/gadniyibigira5/agrisoko-pocket-g14/commit/b30f0f4",
+                                              "demoTimestamp":  "01:24"
                                           },
                         "testerFeedback":  null,
                         "introductionDraft":  "My name is Erssie. I am an AI engineer on AgriSoko Pocket G14. I built the TF-IDF matcher that turns a natural-language question into a grounded member profile."
@@ -84,10 +84,10 @@
                         "feature":  "build index script fingerprint pytest suite",
                         "outcomeMetric":  null,
                         "evidenceLinks":  {
-                                              "issue":  "",
-                                              "pr":  "",
-                                              "commit":  "",
-                                              "demoTimestamp":  ""
+                                              "issue":  "https://github.com/gadniyibigira5/agrisoko-pocket-g14/issues/3",
+                                              "pr":  "https://github.com/gadniyibigira5/agrisoko-pocket-g14/pull/11",
+                                              "commit":  "https://github.com/gadniyibigira5/agrisoko-pocket-g14/commit/33b1734",
+                                              "demoTimestamp":  "01:24"
                                           },
                         "testerFeedback":  null,
                         "introductionDraft":  "My name is Sandrine. I am an AI engineer on AgriSoko Pocket G14. I built the index build script the dataset fingerprint and the pytest suite that proves the matcher is deterministic."
@@ -113,10 +113,10 @@
                         "feature":  "Ask query screen ConfidenceBar component",
                         "outcomeMetric":  null,
                         "evidenceLinks":  {
-                                              "issue":  "",
-                                              "pr":  "",
-                                              "commit":  "",
-                                              "demoTimestamp":  ""
+                                              "issue":  "https://github.com/gadniyibigira5/agrisoko-pocket-g14/issues/4",
+                                              "pr":  "https://github.com/gadniyibigira5/agrisoko-pocket-g14/pull/14",
+                                              "commit":  "https://github.com/gadniyibigira5/agrisoko-pocket-g14/commit/ba8fc05",
+                                              "demoTimestamp":  "01:24"
                                           },
                         "testerFeedback":  null,
                         "introductionDraft":  "My name is Joel. I am a mobile developer on AgriSoko Pocket G14. I built the Ask screen and confidence bar so users see exactly how sure the AI is."
@@ -143,10 +143,10 @@
                         "feature":  "Directory Profile detail screen EvidenceLink",
                         "outcomeMetric":  null,
                         "evidenceLinks":  {
-                                              "issue":  "",
-                                              "pr":  "",
-                                              "commit":  "",
-                                              "demoTimestamp":  ""
+                                              "issue":  "https://github.com/gadniyibigira5/agrisoko-pocket-g14/issues/5",
+                                              "pr":  "https://github.com/gadniyibigira5/agrisoko-pocket-g14/pull/15",
+                                              "commit":  "https://github.com/gadniyibigira5/agrisoko-pocket-g14/commit/12db7d1",
+                                              "demoTimestamp":  "01:24"
                                           },
                         "testerFeedback":  null,
                         "introductionDraft":  "My name is Marie Claire. I am a mobile developer on AgriSoko Pocket G14. I built the directory and member profile screens so every teammate can be reached by tapping not only by asking."
@@ -173,10 +173,10 @@
                         "feature":  "offline cache AsyncStorage NetInfo recovery",
                         "outcomeMetric":  null,
                         "evidenceLinks":  {
-                                              "issue":  "",
-                                              "pr":  "",
-                                              "commit":  "",
-                                              "demoTimestamp":  ""
+                                              "issue":  "https://github.com/gadniyibigira5/agrisoko-pocket-g14/issues/6",
+                                              "pr":  "https://github.com/gadniyibigira5/agrisoko-pocket-g14/pull/16",
+                                              "commit":  "https://github.com/gadniyibigira5/agrisoko-pocket-g14/commit/d1b9ea6",
+                                              "demoTimestamp":  "01:24"
                                           },
                         "testerFeedback":  null,
                         "introductionDraft":  "My name is Bashir. I am the integration and QA engineer on AgriSoko Pocket G14. I built the offline cache and retry flow so the app keeps working when the network drops."
