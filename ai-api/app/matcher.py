@@ -23,6 +23,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 BUILD = Path(__file__).parent.parent / "build"
 THRESHOLD = 0.45
 ALIAS_BOOST = 0.40
+FEATURE_BOOST = 0.35
 STOPWORDS = {
     "who", "is", "the", "a", "an", "tell", "me", "about",
     "built", "build", "made", "did", "what", "does", "was", "of",
@@ -54,6 +55,21 @@ class Matcher:
                     hits[i] = max(hits.get(i, 0.0), ALIAS_BOOST)
                     break
         return hits
+    def _feature_hits(self, cleaned_query: str) -> dict[int, float]:
+        """Feature boost: if 2+ words from a member's feature field appear in the query, boost."""
+        hits = {}
+        query_words = set(cleaned_query.split())
+        if not query_words:
+            return hits
+        for i, m in enumerate(self.members):
+            feature = self.normalize(m.get("feature") or "")
+            feature_words = set(feature.split()) - STOPWORDS
+            overlap = query_words & feature_words
+            if len(overlap) >= 2:
+                hits[i] = max(hits.get(i, 0.0), FEATURE_BOOST)
+            elif len(overlap) == 1 and len(query_words) <= 2:
+                hits[i] = max(hits.get(i, 0.0), FEATURE_BOOST / 2)
+        return hits
 
     def ask(self, question: str) -> dict:
         q_full = self.normalize(question)
@@ -67,10 +83,16 @@ class Matcher:
         qv = self.vectorizer.transform([cleaned_query])
         sims = cosine_similarity(qv, self.matrix)[0].astype(float)
 
-        # Rule 2: exact name/alias boost
+               # Rule 2: exact name/alias boost
         boosts = self._alias_hits(cleaned_query)
         for idx, boost in boosts.items():
             sims[idx] = min(1.0, sims[idx] + boost)
+
+        # Rule 3: feature-field overlap boost (does not stack with alias boost)
+        feature_boosts = self._feature_hits(cleaned_query)
+        for idx, boost in feature_boosts.items():
+            if idx not in boosts:
+                sims[idx] = min(1.0, sims[idx] + boost)
 
         best_idx = int(sims.argmax())
         best_score = float(sims[best_idx])
