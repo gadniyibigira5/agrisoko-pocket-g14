@@ -1,0 +1,31 @@
+{
+  "groupCode": "G14",
+  "description": "Evaluation queries. 3 per member (name/role/feature) + 5 no-match.",
+  "memberQueries": [
+    {"q": "Tell me about Gad",                         "expect": "gad"},
+    {"q": "Who is the group lead",                     "expect": "gad"},
+    {"q": "Who built the home screen",                 "expect": "gad"},
+    {"q": "Tell me about Erssie",                      "expect": "erssie"},
+    {"q": "Who works on AI matching",                  "expect": "erssie"},
+    {"q": "Who built the TF-IDF matcher",              "expect": "erssie"},
+    {"q": "Tell me about Sandrine",                    "expect": "sandrine"},
+    {"q": "Who handles indexing and tests",            "expect": "sandrine"},
+    {"q": "Who wrote build_index.py",                  "expect": "sandrine"},
+    {"q": "Tell me about Joel",                        "expect": "joel"},
+    {"q": "Who built the ask screen",                  "expect": "joel"},
+    {"q": "Who made the confidence bar",               "expect": "joel"},
+    {"q": "Tell me about Marie Claire",                "expect": "claire"},
+    {"q": "Who built the directory and profile",       "expect": "claire"},
+    {"q": "Who made evidence links clickable",         "expect": "claire"},
+    {"q": "Tell me about Bashir",                      "expect": "bashir"},
+    {"q": "Who built offline mode",                    "expect": "bashir"},
+    {"q": "Who handles connection recovery",           "expect": "bashir"}
+  ],
+  "noMatchQueries": [
+    "Who won the 1998 world cup",
+    "What is the capital of France",
+    "Tell me something interesting",
+    "How do I cook rice",
+    "Who is the president of Rwanda"
+  ]
+}
