@@ -1,61 +1,76 @@
-/**
- * Root navigation â€” bottom tabs Home / Ask / Directory + stack for detail screens.
- * Owner: Niyibigira Gad
- */
 import React from "react";
-import { NavigationContainer } from "@react-navigation/native";
+import { NavigationContainer, DefaultTheme, DarkTheme } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Text } from "react-native";
 
 import { HomeScreen } from "../screens/HomeScreen";
-import { colors } from "../theme/tokens";
+import { AskScreen } from "../screens/AskScreen";
+import { DirectoryScreen } from "../screens/DirectoryScreen";
+import { ProfileScreen } from "../screens/ProfileScreen";
+import { AboutScreen } from "../screens/AboutScreen";
+import { useTheme } from "../theme/ThemeContext";
 
 export type RootStackParamList = {
   Tabs: undefined;
-  Result: { memberId: string };
   Profile: { memberId: string };
   About: undefined;
 };
-
 export type TabsParamList = {
   Home: undefined;
   Ask: undefined;
   Directory: undefined;
+  About: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 const Tabs = createBottomTabNavigator<TabsParamList>();
 
-function Placeholder({ name }: { name: string }) {
-  return <Text style={{ padding: 24, color: colors.ink700 }}>{name} screen â€” coming in a later branch.</Text>;
+function TabIcon({ name, color }: { name: string; color: string }) {
+  const map: Record<string, string> = { Home: "\u{1F3E0}", Ask: "\u{1F4AC}", Directory: "\u{1F465}", About: "\u{2139}\u{FE0F}" };
+  return <Text style={{ fontSize: 20, color }}>{map[name] ?? "."}</Text>;
 }
 
 function TabsScreen() {
+  const { palette } = useTheme();
   return (
     <Tabs.Navigator
-      screenOptions={{
-        headerStyle: { backgroundColor: colors.lime400 },
-        headerTitleStyle: { color: colors.lime700, fontWeight: "800" },
-        tabBarActiveTintColor: colors.lime600,
-        tabBarInactiveTintColor: colors.ink500,
-      }}
+      screenOptions={({ route }) => ({
+        headerShown: false,
+        tabBarActiveTintColor: palette.brand.lime400,
+        tabBarInactiveTintColor: palette.text.muted,
+        tabBarStyle: { backgroundColor: palette.card, borderTopColor: palette.border },
+        tabBarIcon: ({ color }) => <TabIcon name={route.name} color={color} />,
+      })}
     >
       <Tabs.Screen name="Home"      component={HomeScreen} />
-      <Tabs.Screen name="Ask"       children={() => <Placeholder name="Ask" />} />
-      <Tabs.Screen name="Directory" children={() => <Placeholder name="Directory" />} />
+      <Tabs.Screen name="Ask"       component={AskScreen} />
+      <Tabs.Screen name="Directory" component={DirectoryScreen} />
+      <Tabs.Screen name="About"     component={AboutScreen} />
     </Tabs.Navigator>
   );
 }
 
 export function RootNav() {
+  const { palette, mode } = useTheme();
+  const base = mode === "dark" ? DarkTheme : DefaultTheme;
+  const navTheme = {
+    ...base,
+    colors: {
+      ...base.colors,
+      background: palette.canvas,
+      card: palette.card,
+      text: palette.text.primary,
+      border: palette.border,
+      primary: palette.brand.lime400,
+    },
+  };
   return (
-    <NavigationContainer>
+    <NavigationContainer theme={navTheme as any}>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         <Stack.Screen name="Tabs" component={TabsScreen} />
-        <Stack.Screen name="Result" children={() => <Placeholder name="Result" />} />
-        <Stack.Screen name="Profile" children={() => <Placeholder name="Profile" />} />
-        <Stack.Screen name="About" children={() => <Placeholder name="About" />} />
+        <Stack.Screen name="Profile" component={ProfileScreen} />
+        <Stack.Screen name="About" component={AboutScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
