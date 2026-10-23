@@ -1,16 +1,4 @@
-"""TF-IDF matcher with alias boost and grounded responses.
-
-Owner: Teta Erssie
-Branch: feat/ai-matcher
-Rules enforced:
-- Deterministic retrieval only (no generative LLM).
-- Returns ONLY fields stored in approved members.json.
-- Confidence threshold 0.45 (documented in report).
-- Stopwords are stripped BEFORE vectorization so noise words do not dilute TF-IDF.
-- Exact name/alias boost: +0.40 to the member whose name/alias appears verbatim in the query.
-  This rule exists because single-token queries over long documents score below 0.45 with pure
-  TF-IDF cosine. Documented in the report under "name/alias boost".
-"""
+"""TF-IDF matcher with alias boost, feature boost, and grounded responses."""
 from __future__ import annotations
 
 import json
@@ -23,10 +11,10 @@ from sklearn.metrics.pairwise import cosine_similarity
 BUILD = Path(__file__).parent.parent / "build"
 THRESHOLD = 0.45
 ALIAS_BOOST = 0.40
-FEATURE_BOOST = 0.35
+FEATURE_BOOST = 0.40
 STOPWORDS = {
     "who", "is", "the", "a", "an", "tell", "me", "about",
-    "built", "build", "made", "did", "what", "does", "was", "of",
+    "made", "did", "what", "does", "was", "of",
     "and", "or", "to", "for", "in", "on", "at", "by", "with",
 }
 
@@ -41,13 +29,11 @@ class Matcher:
         return re.sub(r"[^a-z0-9\s]", " ", text.lower()).strip()
 
     def _alias_hits(self, cleaned_query: str) -> dict[int, float]:
-        """Return {member_index: boost} for members whose alias/full name appears in the query."""
         q = f" {cleaned_query} "
         hits = {}
         for i, m in enumerate(self.members):
             names = [m["fullName"]] + list(m.get("aliases") or [])
             for n in names:
-                # word-boundary match: "gad" matches " gad " but not "gadget"
                 token = self.normalize(n)
                 if not token:
                     continue
@@ -55,20 +41,19 @@ class Matcher:
                     hits[i] = max(hits.get(i, 0.0), ALIAS_BOOST)
                     break
         return hits
+
     def _feature_hits(self, cleaned_query: str) -> dict[int, float]:
-        """Feature boost: if 2+ words from a member's feature field appear in the query, boost."""
         hits = {}
         query_words = set(cleaned_query.split())
         if not query_words:
             return hits
         for i, m in enumerate(self.members):
             feature = self.normalize(m.get("feature") or "")
-            feature_words = set(feature.split()) - STOPWORDS
+            contribution = self.normalize(m.get("contribution") or "")
+            feature_words = (set(feature.split()) | set(contribution.split())) - STOPWORDS
             overlap = query_words & feature_words
-            if len(overlap) >= 2:
+            if overlap:
                 hits[i] = max(hits.get(i, 0.0), FEATURE_BOOST)
-            elif len(overlap) == 1 and len(query_words) <= 2:
-                hits[i] = max(hits.get(i, 0.0), FEATURE_BOOST / 2)
         return hits
 
     def ask(self, question: str) -> dict:
@@ -78,17 +63,13 @@ class Matcher:
             return self._no_match([], "Question contained no searchable terms.")
 
         cleaned_query = " ".join(tokens)
-
-        # Rule 1: TF-IDF cosine similarity
         qv = self.vectorizer.transform([cleaned_query])
         sims = cosine_similarity(qv, self.matrix)[0].astype(float)
 
-               # Rule 2: exact name/alias boost
         boosts = self._alias_hits(cleaned_query)
         for idx, boost in boosts.items():
             sims[idx] = min(1.0, sims[idx] + boost)
 
-        # Rule 3: feature-field overlap boost (does not stack with alias boost)
         feature_boosts = self._feature_hits(cleaned_query)
         for idx, boost in feature_boosts.items():
             if idx not in boosts:
@@ -111,6 +92,8 @@ class Matcher:
         reason = f"Matched on terms: {self._explain(qv, best_idx)}"
         if best_idx in boosts:
             reason = "Exact name/alias match + " + reason
+        elif best_idx in feature_boosts:
+            reason = "Feature word match + " + reason
 
         return {
             "match": member,
@@ -134,7 +117,7 @@ class Matcher:
             f"I worked on {member['feature']} as {member['role']}."
         )
         if not member.get("outcomeMetric"):
-            base = re.sub(r"\s*[—–-]\s*.*$", ".", base).strip()
+            base = re.sub(r"\s*[\u2014\u2013-]\s*.*$", ".", base).strip()
         return base
 
     def _no_match(self, suggestions: list, reason: str) -> dict:

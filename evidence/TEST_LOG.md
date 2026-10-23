@@ -1,6 +1,6 @@
 ﻿# TEST_LOG - AgriSoko Pocket G14
 
-Generated: 2026-10-23 11:45:55
+Generated: 2026-10-23 12:27:38
 API: http://localhost:8000
 Model version: 1.0.0-765cc783
 Threshold: 0.45
@@ -10,8 +10,8 @@ Threshold: 0.45
 | Metric | Value |
 |---|---|
 | Member queries | 18 |
-| Top-1 correct | 14 / 18 |
-| Top-1 accuracy | 77.8% |
+| Top-1 correct | 18 / 18 |
+| Top-1 accuracy | 100% |
 | No-match queries | 5 |
 | No-match correctly rejected | 5 / 5 |
 | No-match rejection rate | 100% |
@@ -20,24 +20,24 @@ Threshold: 0.45
 
 | # | Query | Category | Expected | Got | Confidence | Result |
 |---|---|---|---|---|---|---|
-| 1 | tell me about gad | name | gad | gad | 0.737 | OK |
-| 2 | who is niyibigira gad | name | gad | gad | 0.904 | OK |
-| 3 | who built the home screen | feature | gad | gad | 0.625 | OK |
-| 4 | tell me about erssie | name | erssie | erssie | 0.714 | OK |
-| 5 | who is teta erssie | name | erssie | erssie | 0.932 | OK |
-| 6 | who built the tf-idf matcher | feature | erssie | NONE | 0.0 | MISS |
-| 7 | tell me about sandrine | name | sandrine | sandrine | 0.719 | OK |
-| 8 | who is mbabazi sandrine | name | sandrine | sandrine | 0.94 | OK |
-| 9 | who built the index build | feature | sandrine | NONE | 0.0 | MISS |
-| 10 | tell me about joel | name | joel | joel | 0.745 | OK |
-| 11 | who is joel mogar | name | joel | joel | 0.927 | OK |
-| 12 | who built the ask screen | feature | joel | joel | 0.631 | OK |
-| 13 | tell me about claire | name | claire | claire | 0.754 | OK |
-| 14 | who is marie claire | name | claire | claire | 0.94 | OK |
-| 15 | who built the directory | feature | claire | NONE | 0.0 | MISS |
-| 16 | tell me about bashir | name | bashir | bashir | 0.714 | OK |
-| 17 | who is mohamed bashir | name | bashir | bashir | 0.931 | OK |
-| 18 | who built the offline cache | feature | bashir | NONE | 0.0 | MISS |
+| 1 | tell me about gad | name | gad | gad | 0.735 | OK |
+| 2 | who is niyibigira gad | name | gad | gad | 0.901 | OK |
+| 3 | who built the home screen | feature | gad | gad | 0.673 | OK |
+| 4 | tell me about erssie | name | erssie | erssie | 0.691 | OK |
+| 5 | who is teta erssie | name | erssie | erssie | 0.893 | OK |
+| 6 | who built the tf-idf matcher | feature | erssie | erssie | 0.852 | OK |
+| 7 | tell me about sandrine | name | sandrine | sandrine | 0.69 | OK |
+| 8 | who is mbabazi sandrine | name | sandrine | sandrine | 0.892 | OK |
+| 9 | who built the index build | feature | sandrine | sandrine | 0.651 | OK |
+| 10 | tell me about joel | name | joel | joel | 0.748 | OK |
+| 11 | who is joel mogar | name | joel | joel | 0.931 | OK |
+| 12 | who built the ask screen | feature | joel | joel | 0.629 | OK |
+| 13 | tell me about claire | name | claire | claire | 0.75 | OK |
+| 14 | who is marie claire | name | claire | claire | 0.934 | OK |
+| 15 | who built the directory | feature | claire | claire | 0.578 | OK |
+| 16 | tell me about bashir | name | bashir | bashir | 0.702 | OK |
+| 17 | who is mohamed bashir | name | bashir | bashir | 0.912 | OK |
+| 18 | who built the offline cache | feature | bashir | bashir | 0.744 | OK |
 
 ## No-match queries (should all return null)
 
@@ -50,12 +50,7 @@ Threshold: 0.45
 | 5 | tell me something interesting | 0.0 | PASS |
 
 ## Error analysis
-The following queries returned the wrong member or no match:
-- who built the tf-idf matcher
-- who built the index build
-- who built the directory
-- who built the offline cache
-
+All 18 member queries returned the expected member. No errors.
 ## Method
 
 - TF-IDF vectorizer: word n-grams (1,2), sublinear TF, min_df=1
