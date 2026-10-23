@@ -34,7 +34,7 @@ def fingerprint(path: Path) -> str:
 def doc_text(member: dict) -> str:
     """One searchable document per member. Alias tokens get 3x weight."""
     aliases = " ".join(member.get("aliases") or [])
-    name_block = f"{member['fullName']} {aliases} {aliases} {aliases}"
+    name_block = f"{member['fullName']} {aliases} {aliases} {aliases} {aliases} {aliases}"
     parts = [
         name_block,
         member.get("role", ""),
