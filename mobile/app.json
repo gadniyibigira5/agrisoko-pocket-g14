@@ -16,8 +16,14 @@
     },
     "android": {
       "package": "com.gadniyibigira5.agrisokopocketg14",
-      "versionCode": 2,
+      "versionCode": 3,
       "usesCleartextTraffic": true,
+      "queries": {
+        "intent": [
+          { "action": "android.intent.action.VIEW", "data": { "scheme": "https" } },
+          { "action": "android.intent.action.VIEW", "data": { "scheme": "http" } }
+        ]
+      },
       "adaptiveIcon": {
         "backgroundColor": "#A3E00A"
       }
