@@ -67,10 +67,17 @@ export function RootNav() {
   };
   return (
     <NavigationContainer theme={navTheme as any}>
-      <Stack.Navigator screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="Tabs" component={TabsScreen} />
-        <Stack.Screen name="Profile" component={ProfileScreen} />
-        <Stack.Screen name="About" component={AboutScreen} />
+      <Stack.Navigator
+        screenOptions={{
+          headerStyle: { backgroundColor: palette.card },
+          headerTintColor: palette.brand.lime600,
+          headerTitleStyle: { color: palette.text.primary, fontWeight: "800" },
+          headerShadowVisible: false,
+        }}
+      >
+        <Stack.Screen name="Tabs" component={TabsScreen} options={{ headerShown: false }} />
+        <Stack.Screen name="Profile" component={ProfileScreen} options={{ title: "Profile", headerBackTitle: "Back" }} />
+        <Stack.Screen name="About" component={AboutScreen} options={{ title: "About" }} />
       </Stack.Navigator>
     </NavigationContainer>
   );
