@@ -1,0 +1,13 @@
+﻿node_modules/
+.expo/
+dist/
+*.log
+.env
+.env.*
+__pycache__/
+*.pyc
+.venv/
+venv/
+ai-api/build/*.joblib
+ai-api/build/model_meta.json
+.DS_Store
