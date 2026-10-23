@@ -1,0 +1,25 @@
+{
+  "expo": {
+    "name": "AgriSoko Pocket G14",
+    "slug": "agrisoko-pocket-g14",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "backgroundColor": "#F6FBEF"
+    },
+    "assetBundlePatterns": ["**/*"],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.gadniyibigira5.agrisokopocketg14"
+    },
+    "android": {
+      "package": "com.gadniyibigira5.agrisokopocketg14",
+      "versionCode": 1,
+      "adaptiveIcon": {
+        "backgroundColor": "#A3E00A"
+      }
+    }
+  }
+}

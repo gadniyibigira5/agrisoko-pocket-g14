@@ -1,26 +1,25 @@
 import React from "react";
 import { View, ViewStyle, StyleProp } from "react-native";
-import { colors, radius, shadow, space } from "../theme/tokens";
+import { useTheme } from "../theme/ThemeContext";
+import { radius, space } from "../theme/tokens";
 
-type Props = {
-  children: React.ReactNode;
-  style?: StyleProp<ViewStyle>;
-};
-
-export function Card({ children, style }: Props) {
+export function Card({ children, style }: { children: React.ReactNode; style?: StyleProp<ViewStyle> }) {
+  const { palette, mode } = useTheme();
   return (
-    <View
-      style={[
-        {
-          backgroundColor: colors.card,
-          borderRadius: radius.lg,
-          padding: space.md,
-          ...shadow.card,
-        },
-        style,
-      ]}
-    >
-      {children}
-    </View>
+    <View style={[
+      {
+        backgroundColor: palette.card,
+        borderRadius: radius.lg,
+        padding: space.md,
+        borderWidth: 1,
+        borderColor: palette.border,
+        shadowColor: mode === "light" ? "#2F4A00" : "#000000",
+        shadowOpacity: mode === "light" ? 0.10 : 0.35,
+        shadowRadius: 12,
+        shadowOffset: { width: 0, height: 6 },
+        elevation: 3,
+      },
+      style,
+    ]}>{children}</View>
   );
 }

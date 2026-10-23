@@ -5,126 +5,68 @@ import { Card } from "../components/Card";
 import { Chip } from "../components/Chip";
 import { ConfidenceBar } from "../components/ConfidenceBar";
 import { StateView } from "../components/StateView";
-import { askTeam, AskResult, CONFIG } from "../lib/api";
-import { colors, radius, space, type } from "../theme/tokens";
+import { useTheme } from "../theme/ThemeContext";
+import { askTeam, AskResult } from "../lib/api";
+import { radius, space, type } from "../theme/tokens";
 
-type UiState =
-  | { kind: "idle" }
-  | { kind: "loading" }
-  | { kind: "result"; data: AskResult }
-  | { kind: "error"; message: string };
+type S = { k: "idle" } | { k: "loading" } | { k: "result"; d: AskResult } | { k: "error"; m: string };
 
 export function AskScreen() {
+  const { palette } = useTheme();
   const [q, setQ] = useState("");
-  const [state, setState] = useState<UiState>({ kind: "idle" });
+  const [s, setS] = useState<S>({ k: "idle" });
 
   const submit = async () => {
-    const trimmed = q.trim();
-    if (trimmed.length < 2) {
-      setState({ kind: "error", message: "Type at least 2 characters." });
-      return;
-    }
-    if (trimmed.length > 300) {
-      setState({ kind: "error", message: "Question is too long (max 300)." });
-      return;
-    }
-    setState({ kind: "loading" });
-    try {
-      const data = await askTeam(trimmed);
-      setState({ kind: "result", data });
-    } catch (e: any) {
-      setState({ kind: "error", message: e?.message ?? "Something went wrong." });
-    }
+    const t = q.trim();
+    if (t.length < 2) { setS({ k: "error", m: "Type at least 2 characters." }); return; }
+    if (t.length > 300) { setS({ k: "error", m: "Question is too long (300 max)." }); return; }
+    setS({ k: "loading" });
+    try { setS({ k: "result", d: await askTeam(t) }); }
+    catch (e: any) { setS({ k: "error", m: e?.message ?? "Something went wrong." }); }
   };
 
   return (
-    <Screen gradientHeader>
+    <Screen>
       <ScrollView contentContainerStyle={{ padding: space.md }}>
         <Card>
-          <Text style={styles.h}>Ask the team</Text>
-          <Text style={styles.body}>
-            e.g. "Who built offline mode?" or "Tell me about Erssie."
-          </Text>
+          <Text style={[styles.h, { color: palette.brand.lime600 }]}>Ask the team</Text>
+          <Text style={[styles.body, { color: palette.text.muted }]}>Try a name, role or feature.</Text>
           <TextInput
-            value={q}
-            onChangeText={setQ}
-            placeholder="Type your question"
-            placeholderTextColor={colors.ink300}
-            style={styles.input}
-            maxLength={300}
-            multiline={false}
-            accessibilityLabel="Ask a question about the team"
-            returnKeyType="search"
-            onSubmitEditing={submit}
+            value={q} onChangeText={setQ} placeholder="Type your question" placeholderTextColor={palette.text.muted}
+            style={[styles.input, { color: palette.text.primary, backgroundColor: palette.canvas, borderColor: palette.border }]}
+            maxLength={300} returnKeyType="search" onSubmitEditing={submit}
           />
-          <TouchableOpacity
-            onPress={submit}
-            disabled={state.kind === "loading"}
-            style={[styles.cta, state.kind === "loading" && { opacity: 0.6 }]}
-            accessibilityRole="button"
-            accessibilityLabel="Submit question"
-          >
-            <Text style={styles.ctaLabel}>{state.kind === "loading" ? "Asking..." : "Ask"}</Text>
+          <TouchableOpacity onPress={submit} disabled={s.k === "loading"}
+            style={[styles.cta, { backgroundColor: palette.brand.lime400 }, s.k === "loading" && { opacity: 0.5 }]}>
+            <Text style={styles.ctaTxt}>{s.k === "loading" ? "Asking..." : "Ask"}</Text>
           </TouchableOpacity>
         </Card>
 
-        {state.kind === "loading" && <StateView kind="loading" />}
-
-        {state.kind === "error" && (
-          <StateView kind="error" onRetry={submit} />
-        )}
-
-        {state.kind === "result" && state.data.match === null && (
-          <StateView
-            kind="empty"
-            onRetry={() => setState({ kind: "idle" })}
-          />
-        )}
-
-        {state.kind === "result" && state.data.match !== null && (
+        {s.k === "loading" && <StateView kind="loading" />}
+        {s.k === "error" && <StateView kind="error" onRetry={submit} />}
+        {s.k === "result" && s.d.match === null && <StateView kind="empty" onRetry={() => setS({ k: "idle" })} />}
+        {s.k === "result" && s.d.match !== null && (
           <Card style={{ marginTop: space.md }}>
-            <View style={{ flexDirection: "row", gap: space.xs, alignItems: "center" }}>
-              <Chip variant={state.data.source === "live" ? "live" : state.data.source === "cached" ? "cached" : "offline"} />
-              <Chip variant="matched" label={state.data.match.role} />
+            <View style={{ flexDirection: "row", gap: space.xs }}>
+              <Chip variant={s.d.source === "live" ? "live" : s.d.source === "cached" ? "cached" : "offline"} />
+              <Chip variant="matched" label={s.d.match.role} />
             </View>
-            <Text style={styles.name}>{state.data.match.fullName}</Text>
-            <Text style={styles.body}>{state.data.introduction}</Text>
-            <ConfidenceBar confidence={state.data.confidence} />
-            <Text style={styles.reason}>{state.data.reason}</Text>
+            <Text style={[styles.name, { color: palette.text.primary }]}>{s.d.match.fullName}</Text>
+            <Text style={[styles.body, { color: palette.text.muted }]}>{s.d.introduction}</Text>
+            <ConfidenceBar confidence={s.d.confidence} />
+            <Text style={[styles.small, { color: palette.text.muted }]}>{s.d.reason}</Text>
           </Card>
         )}
-
-        <Card style={{ marginTop: space.md }}>
-          <Text style={styles.small}>Threshold: {CONFIG.confidenceThreshold}. Timeout: {CONFIG.apiTimeoutMs} ms.</Text>
-        </Card>
       </ScrollView>
     </Screen>
   );
 }
-
 const styles = StyleSheet.create({
-  h:       { color: colors.lime700, ...type.h2 },
-  body:    { color: colors.ink700, ...type.body, marginTop: space.xs },
-  small:   { color: colors.ink500, ...type.small },
-  name:    { color: colors.ink900, ...type.h1, marginTop: space.sm },
-  reason:  { color: colors.ink500, ...type.small, marginTop: space.xs },
-  input: {
-    backgroundColor: colors.canvas,
-    borderRadius: radius.md,
-    borderWidth: 1,
-    borderColor: colors.ink100,
-    paddingHorizontal: space.md,
-    paddingVertical: 12,
-    marginTop: space.sm,
-    ...type.body,
-    color: colors.ink900,
-  },
-  cta: {
-    backgroundColor: colors.lime400,
-    borderRadius: radius.pill,
-    paddingVertical: 14,
-    alignItems: "center",
-    marginTop: space.sm,
-  },
-  ctaLabel: { color: colors.ink900, ...type.body, fontWeight: "800" },
+  h:    { ...type.h2 },
+  body: { ...type.body, marginTop: space.xs },
+  small:{ ...type.small, marginTop: space.sm },
+  name: { ...type.h1, marginTop: space.sm },
+  input:{ borderWidth: 1, borderRadius: radius.md, paddingHorizontal: space.md, paddingVertical: 12, marginTop: space.sm, ...type.body },
+  cta:  { borderRadius: radius.pill, paddingVertical: 14, alignItems: "center", marginTop: space.sm },
+  ctaTxt: { color: "#0E1A0C", ...type.body, fontWeight: "800" },
 });

@@ -8,7 +8,7 @@ import NetInfo from "@react-native-community/netinfo";
 export const CONFIG = {
   groupCode: "G14",
   appVersion: "1.0.0",
-  apiBaseUrl: process.env.EXPO_PUBLIC_API_URL ?? "http://10.0.2.2:8000",
+  apiBaseUrl: process.env.EXPO_PUBLIC_API_URL ?? "http://localhost:8000",
   apiTimeoutMs: 8000,
   confidenceThreshold: 0.45,
 };

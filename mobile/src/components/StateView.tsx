@@ -1,42 +1,39 @@
 import React from "react";
-import { View, Text, ActivityIndicator, TouchableOpacity, StyleSheet } from "react-native";
-import { colors, radius, space, type } from "../theme/tokens";
+import { View, Text, ActivityIndicator, TouchableOpacity, Image, StyleSheet } from "react-native";
+import { useTheme } from "../theme/ThemeContext";
+import { radius, space, type } from "../theme/tokens";
 
 type Kind = "loading" | "empty" | "error" | "offline";
 
-const config: Record<Kind, { title: string; body: string; cta?: string }> = {
-  loading: { title: "Searching the team", body: "Comparing your question with approved profiles." },
-  empty:   { title: "No confident match", body: "Try a name, role or feature. You can also open the Directory." },
-  error:   { title: "Server unavailable", body: "We could not reach the AI service. Retry or browse the Directory.", cta: "Retry" },
-  offline: { title: "You are offline", body: "Showing results from your cached directory only.", cta: "Retry" },
-};
-
-export function StateView({
-  kind,
-  onRetry,
-}: {
-  kind: Kind;
-  onRetry?: () => void;
-}) {
-  const c = config[kind];
+export function StateView({ kind, onRetry }: { kind: Kind; onRetry?: () => void }) {
+  const { palette } = useTheme();
+  const config = {
+    loading: { t: "Searching the team", b: "Comparing your question with approved profiles.", cta: null as string | null },
+    empty:   { t: "No confident match", b: "Try a name, role or feature. Or open Directory.", cta: "Try again" },
+    error:   { t: "Server unavailable", b: "We could not reach the AI service.", cta: "Retry" },
+    offline: { t: "You are offline", b: "Showing results from your cached directory only.", cta: "Retry" },
+  }[kind];
   return (
     <View style={styles.wrap}>
-      {kind === "loading" && <ActivityIndicator color={colors.lime500} size="large" />}
-      <Text style={styles.title}>{c.title}</Text>
-      <Text style={styles.body}>{c.body}</Text>
-      {c.cta && onRetry && (
-        <TouchableOpacity onPress={onRetry} style={styles.cta} accessibilityRole="button">
-          <Text style={styles.ctaLabel}>{c.cta}</Text>
+      {kind === "loading" ? (
+        <ActivityIndicator color={palette.brand.lime400} size="large" />
+      ) : (
+        <Image source={require("../../assets/empty.png")} style={{ width: 120, height: 120, opacity: 0.85 }} resizeMode="contain" />
+      )}
+      <Text style={[styles.title, { color: palette.text.primary }]}>{config.t}</Text>
+      <Text style={[styles.body, { color: palette.text.muted }]}>{config.b}</Text>
+      {config.cta && onRetry && (
+        <TouchableOpacity onPress={onRetry} style={[styles.cta, { backgroundColor: palette.brand.lime400 }]}>
+          <Text style={styles.ctaTxt}>{config.cta}</Text>
         </TouchableOpacity>
       )}
     </View>
   );
 }
-
 const styles = StyleSheet.create({
-  wrap: { alignItems: "center", padding: space.lg },
-  title: { ...type.h2, color: colors.ink900, marginTop: space.sm },
-  body:  { ...type.body, color: colors.ink500, textAlign: "center", marginTop: space.xs },
-  cta:   { marginTop: space.md, backgroundColor: colors.lime400, paddingHorizontal: space.lg, paddingVertical: 12, borderRadius: radius.pill },
-  ctaLabel: { ...type.body, color: colors.ink900, fontWeight: "800" },
+  wrap:  { alignItems: "center", padding: space.lg },
+  title: { ...type.h2, marginTop: space.sm },
+  body:  { ...type.body, textAlign: "center", marginTop: space.xs },
+  cta:   { marginTop: space.md, paddingHorizontal: space.lg, paddingVertical: 12, borderRadius: radius.pill },
+  ctaTxt:{ color: "#0E1A0C", ...type.body, fontWeight: "800" },
 });
