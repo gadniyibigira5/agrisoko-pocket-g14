@@ -11,7 +11,7 @@
 | Member | Reg No | Role | GitHub |
 |---|---|---|---|
 | Niyibigira Gad | 25/26952 | Group Lead + Mobile | @gadniyibigira5 |
-| Teta Erssie | - | AI Engineer | @tetaerssie90-svg |
+| Teta Erssie | - | AI Engineer & issue 1 | @tetaerssie90-svg |
 | Mbabazi Sandrine | - | AI Engineer | @mbabazisandrine |
 | Joel Mogar Jr Eliezar | - | Mobile | @joelmongarjr |
 | Uwiringiyimana Marie Claire | - | Mobile | @claireuwiringiyimana796-create |
